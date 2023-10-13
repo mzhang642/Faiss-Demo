@@ -1,11 +1,45 @@
-from flask import Flask
-from backend.api.routes import search_route
+from flask import Flask, current_app
+from backend.api.routes.search_route import search_route
+from backend.utils.load_config import load_config
+from backend.models.data_preprocessor import load_data_from_s3, normalize_data, convert_to_numpy
+from backend.models.faiss_model import initialize_faiss_index
+import logging
 
-app = Flask(__name__)
 
-# Register the search route
-app.register_blueprint(search_route, url_prefix='/api')
+def create_app():
+    app = Flask(__name__)
+
+    # Initialize logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    try:
+        # Load configuration
+        config = load_config()
+    except Exception as e:
+        logging.error(f"Failed to load config: {e}")
+        raise
+
+    with app.app_context():
+        try:
+            # Load data and initialize FAISS index
+            df = load_data_from_s3(config['s3_bucket_name'], config['s3_object_name'])
+            df_normalized, _ = normalize_data(df, config['nutritional_columns'])
+            data_np = convert_to_numpy(df_normalized, config['nutritional_columns'])
+            current_app.index = initialize_faiss_index(data_np)
+            logging.debug(f"Initialized FAISS index: {current_app.index}")
+        except Exception as e:
+            logging.error(f"Failed to initialize FAISS index: {e}")
+            raise
+
+    # Register blueprints
+    app.register_blueprint(search_route, url_prefix='/api')
+
+    @app.route("/")
+    def index():
+        return "Hello, this is Faiss-Demo!"
+
+    return app
 
 if __name__ == "__main__":
+    app = create_app()
     app.run(debug=True)
-
