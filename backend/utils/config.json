@@ -1,0 +1,13 @@
+{
+    "s3_bucket_name": "fooddata-central-branded-food",
+    "s3_object_name": "final_data.csv",
+    "nutritional_columns": [
+      "Protein (g)", "Total Lipid (g)", "Carbohydrate (g)", "Energy (kcal)", 
+      "Calcium (mg)", "Iron (mg)", "Sodium (mg)", "Potassium (mg)", 
+      "Vitamin A (IU)", "Vitamin C (mg)", "Vitamin D (IU)", "Vitamin B-12 (µg)", 
+      "Magnesium (mg)", "Phosphorus (mg)", "Zinc (mg)", "Dietary Fiber (g)", 
+      "Total Sugars (g)", "Cholesterol (mg)", "Fatty Acids, Saturated (g)", 
+      "Folate (µg)", "Vitamin E (mg)", "Vitamin B-6 (mg)"
+    ]
+  }
+  

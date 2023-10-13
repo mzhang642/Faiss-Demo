@@ -1,0 +1,22 @@
+Faiss-Demo/                        # Root directory
+├── venv/                          # Virtual environment (add this to .gitignore)
+├── .github/                       # GitHub Actions for CI/CD
+├── aws/                           # AWS configuration files
+├── scripts/                       # Utility scripts
+├── docs/                          # Additional documentation
+├── backend/                       # Backend source code
+│   ├── api/                       # API (Flask) related code
+│   │   ├── routes/                
+│   │   └── migrations/            # Database migrations
+│   ├── models/                    # Machine learning models (FAISS and others)
+│   └── utils/                     # Helper functions
+├── frontend/                      # Frontend code (Angular)
+├── tests/                         # Test cases
+│   ├── api_tests/
+│   └── model_tests/
+├── .gitignore                     # Ignore file for Git
+├── .env.example                   # Example environment variables
+├── README.md                      # Project description
+├── requirements.txt               # Python dependencies
+├── Dockerfile                     # Docker configuration file for containerization
+└── docker-compose.yml             # Docker Compose to run your service
