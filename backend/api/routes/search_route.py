@@ -19,7 +19,10 @@ def search():
         logging.error("FAISS index not initialized")
         return jsonify({"error": "FAISS index not initialized"}), 500
 
-    query_data = int(request.json.get('query_data', []))
+    # the data coming from JSON could be interpreted as a different type. 
+    # JSON data gets automatically parsed into Python types, but sometimes 
+    # numbers can be parsed into float instead of int, especially when passed through different systems. 
+    query_data = int(request.json.get('query_data', []))  
     
     # Log the incoming query_data to verify that it's what you expect
     logging.debug(f"Received query_data: {query_data}")
