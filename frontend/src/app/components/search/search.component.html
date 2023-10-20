@@ -1,0 +1,14 @@
+<h1>Search Interface</h1>
+
+<!-- Search form -->
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+  <label for="query">Enter your query:</label>
+  <input id="query" formControlName="query_data">
+  <button type="submit">Search</button>
+</form>
+
+<!-- Display results -->
+<div *ngIf="result">
+  <h2>Results:</h2>
+  <pre>{{ result | json }}</pre>
+</div>

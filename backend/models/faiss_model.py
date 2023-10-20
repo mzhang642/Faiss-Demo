@@ -2,6 +2,7 @@ import faiss
 import numpy as np
 import logging
 
+
 def initialize_faiss_index(data_np):
     try:
         data_np = np.ascontiguousarray(data_np)  # Ensure C-contiguous layout
@@ -12,6 +13,9 @@ def initialize_faiss_index(data_np):
     except Exception as e:
         print(f"Error initializing FAISS index: {e}")
         return None
+
+def convert_query(data_np, num_query):
+    return data_np[num_query:num_query+1]
 
 def search_similar_foods(query, index, k=5):
     try:
