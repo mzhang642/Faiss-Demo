@@ -1,0 +1,44 @@
+# version: '3'
+# services:
+#   web: 
+#     build: .
+#     ports: 
+#       - "5000:5000"
+#   elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+#     environment:
+#       - "discovery.type=single-node"
+#     ports:
+#       - "9200:9200"
+
+version: "3.9"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+
+# Transitioning from Docker to AWS:
+# Docker on AWS: AWS provides services like ECS (Elastic Container Service) and Fargate for running Docker containers. These services allow you to deploy your existing Docker containers to AWS with minimal changes.
+
+# AWS Native Services: Alternatively, you could transition from your Dockerized components to AWS managed services. For example, you could replace your Dockerized Elasticsearch with Amazon OpenSearch Service.
+
+# Infrastructure as Code: Tools like AWS CloudFormation or the Serverless Framework can automate the deployment of your AWS infrastructure, making it easier to manage and replicate your AWS setup.
+
+# Environment Variables and Config: Ensure your application is configured to easily switch between local and AWS resources. This usually involves setting environment variables to switch endpoints, credentials, and other configuration settings.
+
+# Testing: Before full deployment, you can have a staging environment on AWS that mimics your production setup. This will allow you to test the system in an environment similar to the production one, ensuring a smoother transition.
+
+
+# Combined Use Cases of Venv and Docker:
+# Development Convenience: You might use venv during development for quick testing and iteration and then use Docker for creating a containerized version of the entire application, ensuring that it runs the same way everywhere.
+
+# Dependency Isolation Inside Containers: If you have a Docker container running a Python application, you might still use a venv inside that container to manage the Python packages. This can make it easier to build your Docker image, manage your Python dependencies, and keep the container lightweight.
+
+# Multiple Services: Your application might consist of multiple services (e.g., web server, database, background workers). Using Docker, you can isolate each of these services into separate containers and manage them through Docker Compose. Each service container might still use a venv for Python dependency management.
+
+# CI/CD Pipelines: In Continuous Integration/Continuous Deployment pipelines, it's common to use Docker for packaging the application and all its dependencies, but within that Docker container, a venv could be used for the Python environment to keep things tidy.

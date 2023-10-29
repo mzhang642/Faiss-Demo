@@ -1,6 +1,6 @@
 {
     "s3_bucket_name": "fooddata-central-branded-food",
-    "s3_object_name": "final_data.csv",
+    "s3_object_name": "sampled_dataset.csv",
     "nutritional_columns": [
       "Protein (g)", "Total Lipid (g)", "Carbohydrate (g)", "Energy (kcal)", 
       "Calcium (mg)", "Iron (mg)", "Sodium (mg)", "Potassium (mg)", 
@@ -8,5 +8,6 @@
       "Magnesium (mg)", "Phosphorus (mg)", "Zinc (mg)", "Dietary Fiber (g)", 
       "Total Sugars (g)", "Cholesterol (mg)", "Fatty Acids, Saturated (g)", 
       "Folate (µg)", "Vitamin E (mg)", "Vitamin B-6 (mg)"
-    ]
+    ], 
+    "elasticsearch_host": "http://52.15.100.12:9200"
   }

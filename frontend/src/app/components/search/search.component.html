@@ -3,9 +3,14 @@
 <!-- Search form -->
 <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
   <label for="query">Enter your query:</label>
-  <input id="query" formControlName="query_data">
+  <input id="query" formControlName="query_data" (input)="onTextInput()">
   <button type="submit">Search</button>
 </form>
+
+<!-- Dropdown -->
+<select *ngIf="fuzzyResults" (change)="onSelectIndex($event)">
+  <option *ngFor="let item of fuzzyResults" [value]="item.index">{{ item.name }}</option>
+</select>
 
 <!-- Display results -->
 <div *ngIf="result">
