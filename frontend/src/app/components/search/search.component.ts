@@ -1,66 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-
+  queryText: string = '';
   result: any = null;
-  fuzzyResults: any = null;
-  searchForm!: FormGroup;
+  autocompleteOptions: any[] = [];
 
   constructor(private searchService: SearchService) { }
 
-  ngOnInit(): void {
-    this.searchForm = new FormGroup({
-      query_data: new FormControl(""),
-      query_text: new FormControl('')  // You can keep this for now
-    });
-  }
+  ngOnInit(): void {}
 
-  onTextInput(): void {
-    const textControl = this.searchForm.get('query_data');
-    if (textControl && textControl.value && isNaN(textControl.value)) {
-      console.log("Performing Fuzzy Search");
-      this.searchService.fuzzySearch(textControl.value).subscribe({
-        next: data => {
-          console.log("Fuzzy Results: ", data);
-          this.fuzzyResults = data.matches;
-        },
-        error: error => console.error('An error occurred', error)
-      });
+  fetchAutocompleteOptions(): void {
+    if (!this.queryText) {
+      this.autocompleteOptions = [];
+      return;
     }
-  }
 
-  onSelectIndex(event: any): void {
-    console.log("Dropdown index selected");
-    const selectedIndex = event.target.value;
-    this.searchService.search(selectedIndex).subscribe({
+    this.searchService.fuzzySearch(this.queryText).subscribe({
       next: data => {
-        console.log("Search API Results: ", data);
-        this.result = data;
+        this.autocompleteOptions = data.matches || [];
       },
       error: error => console.error('An error occurred', error)
     });
   }
 
-  onSubmit(): void {
-    const queryControl = this.searchForm.get('query_data');
-    if (queryControl && queryControl.value && !isNaN(queryControl.value)) {
-      console.log("Submitting direct index search");
-      const queryData = queryControl.value;
-      this.searchService.search(queryData).subscribe({
-        next: data => {
-          console.log("Search API Results: ", data);
-          this.result = data;
-        },
-        error: error => console.error('An error occurred', error)
-      });
-      
-    }
+  onOptionSelected(event: any): void {
+    const selectedValue = event.option.value;
+    this.searchService.search(selectedValue).subscribe({
+      next: data => {
+        this.result = data;
+      },
+      error: error => console.error('An error occurred', error)
+    });
   }
 }

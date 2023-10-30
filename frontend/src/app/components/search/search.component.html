@@ -1,19 +1,17 @@
 <h1>Search Interface</h1>
 
-<!-- Search form -->
-<form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-  <label for="query">Enter your query:</label>
-  <input id="query" formControlName="query_data" (input)="onTextInput()">
-  <button type="submit">Search</button>
-</form>
-
-<!-- Dropdown -->
-<select *ngIf="fuzzyResults" (change)="onSelectIndex($event)">
-  <option *ngFor="let item of fuzzyResults" [value]="item.index">{{ item.name }}</option>
-</select>
+<mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>Enter your query</mat-label>
+    <input type="text" matInput [(ngModel)]="queryText" (keyup)="fetchAutocompleteOptions()" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+      <mat-option *ngFor="let option of autocompleteOptions" [value]="option.name">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+</mat-form-field>
 
 <!-- Display results -->
 <div *ngIf="result">
-  <h2>Results:</h2>
-  <pre>{{ result | json }}</pre>
+    <h2>Results:</h2>
+    <pre>{{ result | json }}</pre>
 </div>
