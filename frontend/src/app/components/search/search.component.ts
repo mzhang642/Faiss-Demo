@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
 
 @Component({
@@ -21,18 +20,19 @@ export class SearchComponent implements OnInit {
       this.autocompleteOptions = [];
       return;
     }
-
+  
     this.searchService.fuzzySearch(this.queryText).subscribe({
       next: data => {
-        this.autocompleteOptions = data.matches || [];
+        this.autocompleteOptions = data.matches || []; // Directly use the 'matches' structure
       },
       error: error => console.error('An error occurred', error)
     });
   }
+  
 
   onOptionSelected(event: any): void {
-    const selectedValue = event.option.value;
-    this.searchService.search(selectedValue).subscribe({
+    const selectedIndex = event.option.value; // This should be the '_id' from your matches
+    this.searchService.search(selectedIndex).subscribe({
       next: data => {
         this.result = data;
       },

@@ -4,7 +4,7 @@
     <mat-label>Enter your query</mat-label>
     <input type="text" matInput [(ngModel)]="queryText" (keyup)="fetchAutocompleteOptions()" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
-      <mat-option *ngFor="let option of autocompleteOptions" [value]="option.name">
+      <mat-option *ngFor="let option of autocompleteOptions" [value]="option.index">
         {{option.name}}
       </mat-option>
     </mat-autocomplete>
