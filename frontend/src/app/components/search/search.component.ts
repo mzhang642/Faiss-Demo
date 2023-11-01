@@ -31,15 +31,19 @@ export class SearchComponent implements OnInit {
   
 
   onOptionSelected(event: any): void {
-    const selectedOption = event.option.value;
-    const selectedIndex = selectedOption.index;
+    const selectedName = event.option.value;
+    const selectedOption = this.autocompleteOptions.find(option => option.name === selectedName);
+    const selectedIndex = selectedOption ? selectedOption.index : null;
 
-    this.searchService.search(selectedIndex).subscribe({
-      next: data => {
-        this.result = data;
-      },
-      error: error => console.error('An error occurred', error)
-    });
-  }
+    if (selectedIndex !== null) {
+        this.searchService.search(selectedIndex).subscribe({
+          next: data => {
+            this.result = data;
+          },
+          error: error => console.error('An error occurred', error)
+        });
+    }
+}
+
 
 }
