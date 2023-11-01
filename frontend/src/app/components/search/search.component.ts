@@ -31,7 +31,9 @@ export class SearchComponent implements OnInit {
   
 
   onOptionSelected(event: any): void {
-    const selectedIndex = event.option.value; // This should be the '_id' from your matches
+    const selectedOption = event.option.value;
+    const selectedIndex = selectedOption.index;
+
     this.searchService.search(selectedIndex).subscribe({
       next: data => {
         this.result = data;
@@ -39,4 +41,5 @@ export class SearchComponent implements OnInit {
       error: error => console.error('An error occurred', error)
     });
   }
+
 }
