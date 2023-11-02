@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
-from backend.models.faiss_model import search_similar_foods, convert_query
+from backend.models.faiss_model import search_similar_foods, convert_query, convert_results
 import numpy as np
 import logging
 
@@ -7,6 +7,9 @@ search_route = Blueprint('search', __name__)
 
 @search_route.route('/search', methods=['POST'])
 def search():
+
+    # retrieve data from pd.df of original data
+    df = current_app.df
     # Get the FAISS index from the application context
     index = current_app.index
     data_np = current_app.data_np
@@ -39,12 +42,12 @@ def search():
 
     try:
         # Perform the actual search
-
         query = convert_query(data_np, query_data)
         D, I = search_similar_foods(np.array(query, dtype=np.float32), index)
-
+        results = convert_results(D, I, df)
         # Return results
-        return jsonify({"distances": D.tolist(), "indices": I.tolist()})
+        return jsonify(results)
+    
     except Exception as e:
         # Log the exception for debugging
         logging.error(f"Error during search: {e}")

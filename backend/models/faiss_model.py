@@ -31,3 +31,17 @@ def search_similar_foods(query, index, k=5):
     except Exception as e:
         print(f"Error searching similar foods: {e}")
         return None, None
+
+def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 'ingredients']):
+    
+        # Extracting relevant information using indices I from dataframe df
+        results = df.iloc[I[0]][fields]
+        # Convert the results to a list of dictionaries for JSON serialization
+        results_list = results.to_dict(orient='records')
+        response_data = {
+            "distances": D.tolist(), 
+            "indices": I.tolist(), 
+            "similar foods": results_list 
+        }
+
+        return response_data
