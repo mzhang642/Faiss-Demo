@@ -34,8 +34,9 @@ def load_data_from_s3(bucket_name, file_name):
 def normalize_data(df, columns):
     try:
         scaler = StandardScaler()
-        df[columns] = scaler.fit_transform(df[columns])
-        return df, scaler
+        df_copy = df.copy()
+        df_copy[columns] = scaler.fit_transform(df_copy[columns])
+        return df_copy, scaler
     except Exception as e:
         print(f"Error normalizing data: {e}")
         return None, None

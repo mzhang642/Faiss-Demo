@@ -32,7 +32,7 @@ def search_similar_foods(query, index, k=5):
         print(f"Error searching similar foods: {e}")
         return None, None
 
-def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 'ingredients']):
+def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 'ingredients', 'Protein (g)', 'Total Lipid (g)', 'Carbohydrate (g)', 'Energy (kcal)']):
     
         # Extracting relevant information using indices I from dataframe df
         results = df.iloc[I[0]][fields]
@@ -40,7 +40,7 @@ def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoo
         results_list = results.to_dict(orient='records')
         response_data = {
             "distances": D.tolist(), 
-            "indices": I.tolist(), 
+            # "indices": I.tolist(), 
             "similar foods": results_list 
         }
 
