@@ -32,16 +32,19 @@ def search_similar_foods(query, index, k=5):
         print(f"Error searching similar foods: {e}")
         return None, None
 
-def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 'ingredients', 'Protein (g)', 'Total Lipid (g)', 'Carbohydrate (g)', 'Energy (kcal)']):
+def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 
+                                        'ingredients', 'Protein (g)', 'Total Lipid (g)', 
+                                        'Carbohydrate (g)', 'Energy (kcal)']):
     
         # Extracting relevant information using indices I from dataframe df
         results = df.iloc[I[0]][fields]
         # Convert the results to a list of dictionaries for JSON serialization
         results_list = results.to_dict(orient='records')
+        # Adding the 'index' key to each dictionary in results_list
+        for index, result in zip(I[0], results_list):
+            result['index'] = index
         response_data = {
             "distances": D.tolist(), 
-            # "indices": I.tolist(), 
             "similar foods": results_list 
-        }
-
+            }
         return response_data
