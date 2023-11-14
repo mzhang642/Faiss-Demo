@@ -13,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/search.component';
-import { D3FDGComponent } from './components/d3-fdg/d3-fdg.component';
 import { D3GraphComponent } from './components/d3-graph/d3-graph.component';
 
 
@@ -21,7 +20,6 @@ import { D3GraphComponent } from './components/d3-graph/d3-graph.component';
   declarations: [
     AppComponent,
     SearchComponent,
-    D3FDGComponent,
     D3GraphComponent
   ],
   imports: [

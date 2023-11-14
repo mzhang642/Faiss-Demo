@@ -1,5 +1,5 @@
 // d3-graph.component.ts
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import * as d3 from 'd3';
 import { Subscription } from 'rxjs';
@@ -26,6 +26,7 @@ interface GraphData {
   styleUrls: ['./d3-graph.component.css']
 })
 export class D3GraphComponent implements OnInit, OnDestroy {
+  @Input() graphData: any; // Make sure this is decorated with @Input()
   @ViewChild('graphContainer', { static: true }) private graphContainer!: ElementRef;
   private graphSubscription!: Subscription;
 
@@ -33,6 +34,7 @@ export class D3GraphComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.graphSubscription = this.searchService.graphData$.subscribe(graphData => {
+      console.log('Received graphData:', graphData);  
       if (graphData) {
         this.renderGraph(graphData as GraphData);
       }
@@ -109,6 +111,8 @@ export class D3GraphComponent implements OnInit, OnDestroy {
           .attr('cx', d => (d as Node).x!)
           .attr('cy', d => (d as Node).y!);
     });
+
+    console.log('Rendering graph with data:', graphData); // Add for debugging
   }
 
   ngOnDestroy() {

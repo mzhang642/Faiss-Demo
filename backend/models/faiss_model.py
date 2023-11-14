@@ -42,7 +42,7 @@ def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoo
         results_list = results.to_dict(orient='records')
         # Adding the 'index' key to each dictionary in results_list
         for index, result in zip(I[0], results_list):
-            result['index'] = index
+            result['index'] = int(index)
         response_data = {
             "distances": D.tolist(), 
             "similar foods": results_list 

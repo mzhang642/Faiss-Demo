@@ -75,7 +75,8 @@ export class SearchComponent implements OnInit {
         });
       }
     });
-  
+
+    console.log('Transformed graphData:', { nodes, links }); // Add for debugging
     return { nodes, links };
   
   }  
