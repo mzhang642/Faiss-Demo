@@ -56,3 +56,4 @@ def search():
 
 
 #  curl -X POST -H "Content-Type: application/json" -d '{"query_data": 1}' http://127.0.0.1:5000/api/search
+
