@@ -2,3 +2,18 @@
     width: 100%;
   }
   
+.layout-container {
+    display: flex;
+  }
+  
+.graph-container {
+    flex: 1;
+    padding-right: 10px; /* Adjust spacing as needed */
+  }
+  
+.details-container {
+    flex: 1;
+    padding-left: 10px; /* Adjust spacing as needed */
+    border-left: 1px solid #ddd; /* Optional divider */
+  }
+  

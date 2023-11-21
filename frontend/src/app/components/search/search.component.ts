@@ -12,6 +12,7 @@ export class SearchComponent implements OnInit {
   result: any = null;
   autocompleteOptions: any[] = [];
   graphData: any = null;  
+  selectedNodeData: any
 
   constructor(private searchService: SearchService) { }
 
@@ -75,10 +76,15 @@ export class SearchComponent implements OnInit {
         });
       }
     });
-
+    
     console.log('Transformed graphData:', { nodes, links }); // Add for debugging
     return { nodes, links };
   
-  }  
+  }
+  
+  
+  onNodeClicked(nodeData: any): void {
+    this.selectedNodeData = nodeData;
+  }
 
 }

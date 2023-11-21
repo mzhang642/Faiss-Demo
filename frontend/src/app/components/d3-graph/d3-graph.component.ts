@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import * as d3 from 'd3';
 import { Subscription } from 'rxjs';
@@ -26,7 +26,8 @@ interface GraphData {
   styleUrls: ['./d3-graph.component.css']
 })
 export class D3GraphComponent implements OnInit, OnDestroy {
-  @Input() graphData: any; // Make sure this is decorated with @Input()
+  // @Input() graphData: any; 
+  @Output() nodeClicked = new EventEmitter<any>();
   @ViewChild('graphContainer', { static: true }) private graphContainer!: ElementRef;
   private graphSubscription!: Subscription;
 
@@ -40,35 +41,40 @@ export class D3GraphComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   private renderGraph(graphData: GraphData): void {
     d3.select(this.graphContainer.nativeElement).selectAll('*').remove();
-
-    const linkValueByNodeId = new Map<string, number>();
-    graphData.links.forEach(link => {
-      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-      linkValueByNodeId.set(targetId, link.value);
-    });
 
     const colorScale = d3.scaleLinear<string>()
       .domain(d3.extent(graphData.links, d => d.value) as [number, number])
       .range(['lightblue', 'darkblue']);
 
     const sizeScale = d3.scaleLinear<number>()
+      .domain(d3.extent(graphData.links, d => Math.exp(-d.value)) as [number, number])
+      .range([45, 15]).clamp(true);
+      
+    const distanceScale = d3.scaleLinear<number>()
       .domain(d3.extent(graphData.links, d => d.value) as [number, number])
-      .range([5, 15]);
+      .range([15, 40]).clamp(true);
 
     const svg = d3.select(this.graphContainer.nativeElement).append('svg')
       .attr('width', this.graphContainer.nativeElement.offsetWidth)
       .attr('height', this.graphContainer.nativeElement.offsetHeight);
 
     let simulation = d3.forceSimulation(graphData.nodes)
-      .force('link', d3.forceLink<Node, Link>(graphData.links).id(d => d.id))
+      .force('link', d3.forceLink<Node, Link>(graphData.links).id(d => d.id).distance(d => distanceScale(d.value)) )
       .force('charge', d3.forceManyBody())
       .force('center', d3.forceCenter(
         parseFloat(svg.attr('width')) / 2, 
         parseFloat(svg.attr('height')) / 2
       ));
+
+    const linkValueByNodeId = new Map<string, number>();
+    graphData.links.forEach(link => linkValueByNodeId.set(link.target.id, link.value) );
+
+    const centralNodeId = graphData.nodes.find(node => node.group === 1)?.id;
+    if (centralNodeId) {
+      linkValueByNodeId.set(centralNodeId, 0);
+    }
 
     let link = svg.selectAll('line')
       .data(graphData.links)
@@ -79,15 +85,15 @@ export class D3GraphComponent implements OnInit, OnDestroy {
     let node = svg.selectAll('circle')
       .data(graphData.nodes)
       .enter().append('circle')
-      .attr('r', d => {
-        if (d.group === 1) {
-          return 20;  // Fixed size for central node (group 1)
-        } else {
-          const linkValue = linkValueByNodeId.get(d.id);
-          return linkValue ? sizeScale(linkValue) : 5;
-        }
-      })
-      .style('fill', d => d.group === 1 ? 'green' : colorScale(linkValueByNodeId.get(d.id) ?? 0));
+      .attr('r', d => sizeScale(linkValueByNodeId.get(d.id) ?? 100))
+      .style('fill', d => d.group === 1 ? 'green' : colorScale(linkValueByNodeId.get(d.id) ?? 0))
+      .on('click', (event, d) => {
+        const nodeData = {
+          ...d.data,
+          distance: linkValueByNodeId.get(d.id)
+        };
+        this.nodeClicked.emit(nodeData);
+      });
 
     // Drag functionality for nodes
     const drag = (simulation: d3.Simulation<Node, undefined>) => {

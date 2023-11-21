@@ -1,19 +1,27 @@
+<!-- Search Interface -->
 <h1>Search Interface</h1>
 
 <mat-form-field appearance="fill" class="example-full-width">
-    <mat-label>Enter your query</mat-label>
-    <input type="text" matInput [(ngModel)]="queryText" (keyup)="fetchAutocompleteOptions()" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
-      <mat-option *ngFor="let option of autocompleteOptions" [value]="option.name">
-        {{option.name}}
-      </mat-option>
-    </mat-autocomplete>
+  <mat-label>Enter your query</mat-label>
+  <input type="text" matInput [(ngModel)]="queryText" (keyup)="fetchAutocompleteOptions()" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+    <mat-option *ngFor="let option of autocompleteOptions" [value]="option.name">
+      {{option.name}}
+    </mat-option>
+  </mat-autocomplete>
 </mat-form-field>
 
-Display results
-<div *ngIf="result">
-    <h2>Results:</h2>
-    <pre>{{ result | json }}</pre>
-</div>
+<!-- Layout for graph and node details -->
+<div class="layout-container">
+  <!-- Graph Container -->
+  <div class="graph-container">
+    <!-- [graphData]="graphData" removed --> 
+    <app-d3-graph (nodeClicked)="onNodeClicked($event)"></app-d3-graph> 
+  </div>
 
-<app-d3-graph [graphData]="graphData"></app-d3-graph>
+  <!-- Node Details Container -->
+  <div class="details-container" *ngIf="selectedNodeData">
+    <h2>Node Details:</h2>
+    <pre>{{ selectedNodeData | json }}</pre>
+  </div>
+</div>
