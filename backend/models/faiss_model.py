@@ -32,19 +32,33 @@ def search_similar_foods(query, index, k=20):
         print(f"Error searching similar foods: {e}")
         return None, None
 
-def convert_results(D, I, df, fields = ['description', 'brandOwner', 'brandedFoodCategory', 
-                                        'ingredients', 'Protein (g)', 'Total Lipid (g)', 
-                                        'Carbohydrate (g)', 'Energy (kcal)']):
-    
+
+def convert_results(D, I, df, fields=['description', 'brandOwner', 'brandedFoodCategory', 
+                                      'ingredients', 'Protein (g)', 'Total Lipid (g)', 
+                                      'Carbohydrate (g)', 'Energy (kcal)']):
+    try:
+        # Check if all required fields are present in the dataframe
+        missing_fields = [field for field in fields if field not in df.columns]
+        if missing_fields:
+            logging.error(f"Missing fields in dataframe while converting Search result: {missing_fields}")
+            return None
+
         # Extracting relevant information using indices I from dataframe df
         results = df.iloc[I[0]][fields]
-        # Convert the results to a list of dictionaries for JSON serialization
         results_list = results.to_dict(orient='records')
+
         # Adding the 'index' key to each dictionary in results_list
         for index, result in zip(I[0], results_list):
             result['index'] = int(index)
+
         response_data = {
-            "distances": D.tolist(), 
-            "similar foods": results_list 
-            }
+            "distances": D.tolist(),
+            "similar foods": results_list
+        }
+
+        # Log a concise message instead of the full data
+        logging.debug(f"convert_results executed successfully. Number of results: {len(results_list)}")
         return response_data
+    except Exception as e:
+        logging.error(f"Error in convert_results: {e}")
+        return None
