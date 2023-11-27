@@ -1,6 +1,6 @@
 {
     "s3_bucket_name": "fooddata-central-branded-food",
-    "s3_object_name": "sampled_dataset.csv",
+    "s3_object_name": "sampled_large_dataset.csv",
     "nutritional_columns": [
       "Protein (g)", "Total Lipid (g)", "Carbohydrate (g)", "Energy (kcal)", 
       "Calcium (mg)", "Iron (mg)", "Sodium (mg)", "Potassium (mg)", 

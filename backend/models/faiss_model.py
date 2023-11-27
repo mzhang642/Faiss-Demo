@@ -17,7 +17,7 @@ def initialize_faiss_index(data_np):
 def convert_query(data_np, num_query):
     return data_np[num_query:num_query+1]
 
-def search_similar_foods(query, index, k=5):
+def search_similar_foods(query, index, k=20):
     try:
         logging.debug(f"Query data shape: {query.shape}")
         logging.debug(f"Query data type: {query.dtype}")

@@ -37,6 +37,7 @@ export class D3GraphComponent implements OnInit, OnDestroy {
     this.graphSubscription = this.searchService.graphData$.subscribe(graphData => {
       console.log('Received graphData:', graphData);
       if (graphData) {
+        // console.log('Links:', graphData.links);
         this.renderGraph(graphData as GraphData);
       }
     });
@@ -46,15 +47,15 @@ export class D3GraphComponent implements OnInit, OnDestroy {
 
     const colorScale = d3.scaleLinear<string>()
       .domain(d3.extent(graphData.links, d => d.value) as [number, number])
-      .range(['lightblue', 'darkblue']);
+      .range(['lightgreen', 'lightyellow']);
 
     const sizeScale = d3.scaleLinear<number>()
-      .domain(d3.extent(graphData.links, d => Math.exp(-d.value)) as [number, number])
-      .range([45, 15]).clamp(true);
+      .domain(d3.extent(graphData.links, d => d.value) as [number, number])
+      .range([30, 10]).clamp(true);
       
     const distanceScale = d3.scaleLinear<number>()
       .domain(d3.extent(graphData.links, d => d.value) as [number, number])
-      .range([15, 40]).clamp(true);
+      .range([60, 120]).clamp(true);
 
     const svg = d3.select(this.graphContainer.nativeElement).append('svg')
       .attr('width', this.graphContainer.nativeElement.offsetWidth)
@@ -70,7 +71,6 @@ export class D3GraphComponent implements OnInit, OnDestroy {
 
     const linkValueByNodeId = new Map<string, number>();
     graphData.links.forEach(link => linkValueByNodeId.set(link.target.id, link.value) );
-
     const centralNodeId = graphData.nodes.find(node => node.group === 1)?.id;
     if (centralNodeId) {
       linkValueByNodeId.set(centralNodeId, 0);
@@ -80,13 +80,15 @@ export class D3GraphComponent implements OnInit, OnDestroy {
       .data(graphData.links)
       .enter().append('line')
       .attr('stroke-width', 2)
-      .style('stroke', 'grey');
+      // .style('stroke', 'lightgrey')
+      .style('display', 'none');
+    // console.log('Link elements:', link.nodes());
 
     let node = svg.selectAll('circle')
       .data(graphData.nodes)
       .enter().append('circle')
       .attr('r', d => sizeScale(linkValueByNodeId.get(d.id) ?? 100))
-      .style('fill', d => d.group === 1 ? 'green' : colorScale(linkValueByNodeId.get(d.id) ?? 0))
+      .style('fill', d => d.group === 1 ? 'lightblue' : colorScale(linkValueByNodeId.get(d.id) ?? 0))
       .on('click', (event, d) => {
         const nodeData = {
           ...d.data,
